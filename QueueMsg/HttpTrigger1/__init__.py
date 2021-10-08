@@ -7,7 +7,11 @@ def main(req: func.HttpRequest, msg: func.Out[func.QueueMessage]) -> func.HttpRe
     try:
         req_body = req.get_json()
         document_list = req_body.get('documentList')
-        # document_list = ["sample_file1.txt", "sample_file2.txt", "sample_file3.txt", "sample_file4.txt"]
+        with open("records.csv", 'r') as read_obj:
+            csv_reader = read_obj.read()
+        data = csv_reader.split("\n")
+        for i in range(len(data)):
+            document_list.append(data[i])
     except ValueError:
         return func.HttpResponse(
              "Please pass a documentList parameter in the request body",
@@ -27,4 +31,4 @@ def main(req: func.HttpRequest, msg: func.Out[func.QueueMessage]) -> func.HttpRe
             return func.HttpResponse(
                 f"Error: {e}",
                 status_code=500
-        )
+            )
